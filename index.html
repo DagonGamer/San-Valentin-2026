@@ -430,19 +430,40 @@ html {
     <script>
 // The End Of Year Date To Countdown Date
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Unix timestamp (in seconds) to count down to
-    var toDayFromNow = (new Date(`Apr 19, 2027 23:59:59`).getTime() / 1000);
+var flipdown;
+
+let calcYear = () => {
+    let Now = new Date(Date.now());
+    let Year = Now.getFullYear();
+    if (Now.getTime() - new Date(`Apr 19, ${Year} 11:59:59`) > 0) {
+        return (new Date(`Apr 19, ${Year+1} 11:59:59`).getTime() / 1000)
+    } else return (new Date(`Apr 19, ${Year} 11:59:59`).getTime() / 1000)
+}
+
+let cargarFlipDown = (n = 0) => {
+    
+    // Unix timestamp (in seconds) to count down to [Apr 19, 2027 11:59:59]
+    var toDayFromNow = calcYear();
+
+    let flipdownElement = document.createElement("div");
+    flipdownElement.id = "FlipDown"+n;
+    flipdownElement.className = "flipdown flipdown__theme-dark";
+    document.querySelector(".text-wrapper").appendChild(flipdownElement);
+
     // Set Up FlipDown
-    var flipdown = new FlipDown(toDayFromNow)
+    flipdown = new FlipDown(toDayFromNow, "FlipDown"+n)
 
     // Start The Count Down
     .start()
     // Do Something When The Countdown Ends
     .ifEnded(() => {
-        document.querySelector(".flipdown").innerHTML = `<h2>Timer is ended</h2>`;
+        alert("Bonito mientras duró supongo; sin embargo no dedicaré tiempo a una etapa que ya terminó. Hasta el próximo año.");
+        flipdown.element.style.opacity = 0;
+        cargarFlipDown(n+1);
     });
-});
+}
+
+document.addEventListener('DOMContentLoaded', cargarFlipDown());
 
     </script>
 
